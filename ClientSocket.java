@@ -26,4 +26,4 @@ class Client extends Thread{
         Client(Socket s){
             start();
         }
-    }
+}
