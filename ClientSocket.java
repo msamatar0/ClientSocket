@@ -1,29 +1,30 @@
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  *
  * @author msamatar0
  */
 public class ClientSocket{
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args){
         Scanner in = new Scanner(System.in);
-        Socket cs = new Socket("cim.saddleback.edu", 2000);
-        DataOutputStream dos = new DataOutputStream(cs.getOutputStream());
-        DataInputStream dis = new DataInputStream(cs.getInputStream());
-        ServerSocket ss = new ServerSocket(5000);
-        //int read = 0;
-        dos.writeInt(dis.readInt());
-        while(true){
-            Socket c = ss.accept();
-            new Client(c);
+        int n = 0;
+        try(
+            Socket cs = new Socket("cim.saddleback.edu", 5000);
+            DataInputStream cin = new DataInputStream(cs.getInputStream());
+            DataOutputStream cout = new DataOutputStream(cs.getOutputStream());){
+            while(n != -1){
+                n = in.nextInt();
+                cout.writeInt(n);
+                if(n != -1)
+                    System.out.println(cin.readInt());
+            }
         }
+        catch(IOException ex){
+            System.out.println("ex");
+            ex.getMessage();
+        }
+        
     }
-}
-
-class Client extends Thread{
-        Client(Socket s){
-            start();
-        }
 }
