@@ -31,73 +31,117 @@ public class Poker{
     public static void main(String[] args){
         Scanner in = new Scanner(System.in);
         Card hand[] = new Card[5];
-        while(true){
-//        while(in.hasNextInt()){
-//            for(int i = 0; i < 5; i++)
-//                hand[i] = new Card(in.nextInt());
-            for(int i = 0; i < testDeck.length; ++i){
-                for(int j = 0; j < 5; ++j){
-                    hand[j] = new Card(testDeck[i][j]);
-                }
-                System.out.println(Arrays.toString(hand));
+        int cardNum[] = new int[5],
+            idNum[] = new int[5],
+            suitNum[] = new int[5];
+        ArrayList<String> handNames = new ArrayList<>();
+        while(in.hasNextInt()){
+            for(int i = 0; i < 5; i++){
+                hand[i] = new Card(in.nextInt());
+                cardNum[i] = hand[i].getCard();
+                idNum[i] = hand[i].getID();
+                suitNum[i] = hand[i].getSuit();
             }
-            return;
+            Arrays.sort(hand);
+            Arrays.sort(cardNum);
+            Arrays.sort(idNum);
+            Arrays.sort(suitNum);
+            if(incrementing(idNum) && uniform(suitNum))
+                handNames.add(Arrays.equals(cardNum, new int[]{10, 11, 12, 13, 1})? "Royal Flush" : "Straight Flush");
+            
+            handNames.stream().forEach((i) -> System.out.println(i));
         }
+    }
+    
+    public static boolean uniform(int[] arr){
+        for(int i = 0; i < arr.length; ++i){
+            int n = arr[i];
+            if(i < arr.length && n == arr[i + 1]);
+            else if(i < arr.length && n != arr[i + 1])
+                return false;
+            else
+                break;
+        }
+        return true;
+    }
+    
+    public static boolean incrementing(int[] arr){
+        for(int i = 0; i < arr.length; ++i){
+            int n = arr[i];
+            if(i < arr.length && n == arr[i + 1] + 1);
+            else if(i < arr.length && n != arr[i + 1] + 1)
+                return false;
+            else
+                break;
+        }
+        return true;
     }
 }
 
-class Card{
-    int id = 0;
-    String name = "";
+class Card implements Comparable<Card>{
+    int id = 0, card = 0, suit = 0;
     
     public Card(int n){
         id = n;
-        int snum = id / 13;
-        String suit;
-        switch(snum){
-            case 0:
-                suit = " of Spades";
-                break;
-            case 1:
-                suit = " of Hearts";
-                break;
-            case 2:
-                suit = " of Diamonds";
-                break;
-            case 3:
-                suit = " of Clubs";
-                break;
-            default:
-                suit = "";
-        }
-        int cnum = id % 13;
-        String card;
-        switch(cnum){
-            case 1:
-                card = "Ace";
-                break;
-            case 11:
-                card = "Jack";
-                break;
-            case 12:
-                card = "Queen";
-                break;
-            case 13:
-                card = "King";
-                break;
-            default:
-                card = cnum + "";
-        }
-        name = card + suit;
+        card = id % 13;
+        suit = id / 13;
     }
     
     public int getID(){
         return id;
     }
     
-    @Override
-    public String toString(){        
-        return name;
+    public int getCard(){
+        return id;
     }
+    
+    public int getSuit(){
+        return id;
+    }
+    
+    @Override
+    public int compareTo(Card o){
+        return id - o.id;
+    }
+    
+    @Override
+    public String toString(){
+        String cardStr, suitStr;
+        switch(card){
+            case 1:
+                cardStr = "Ace";
+                break;
+            case 11:
+                cardStr = "Jack";
+                break;
+            case 12:
+                cardStr = "Queen";
+                break;
+            case 13:
+                cardStr = "King";
+                break;
+            default:
+                cardStr = card + "";
+        }
+        switch(suit){
+            case 0:
+                suitStr = "of Spades";
+                break;
+            case 1:
+                suitStr = "of Hearts";
+                break;
+            case 2:
+                suitStr = "of Diamonds";
+                break;
+            case 3:
+                suitStr = "of Clubs";
+                break;
+            default:
+                suitStr = "";
+        }
+        return cardStr + " " + suitStr;
+    }
+
+    
 }
 
